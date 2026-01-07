@@ -1,89 +1,191 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sturdy Bench – Character Sheet</title>
+<title>D&D Character Sheet</title>
 
 <style>
-  body {
-    background: #2e3328;
-    font-family: Georgia, serif;
-    padding: 1rem;
-  }
+:root{
+  --bg:#2b2f26;
+  --paper:#fdfaf4;
+  --ink:#1f1f1f;
+  --muted:#666;
+  --accent:#7b8f5a;
+  --line:#c9c4b8;
+}
 
-  .sheet {
-    max-width: 1100px;
-    margin: auto;
-    background: #fdfaf4;
-    padding: 1.2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,.4);
-  }
+/* DARK MODE */
+body.dark{
+  --bg:#111;
+  --paper:#1e1e1e;
+  --ink:#eee;
+  --muted:#aaa;
+  --line:#444;
+}
 
-  h1, h2 { text-align: center; }
-  h2 { border-bottom: 2px solid #333; margin-top: 1.4rem; }
+*{box-sizing:border-box}
 
-  label { font-weight: bold; font-size: 0.8rem; }
-  input, textarea {
-    width: 100%;
-    padding: 0.4rem;
-    font-size: 0.95rem;
-    border-radius: 4px;
-    border: 1px solid #999;
-  }
+body{
+  background:var(--bg);
+  font-family:Inter,system-ui,sans-serif;
+  margin:0;
+  padding:.25rem;
+  color:var(--ink);
+}
 
-  textarea { min-height: 60px; resize: vertical; }
+.sheet{
+  width:100%;
+  max-width:1800px;
+  margin:auto;
+  background:
+    linear-gradient(rgba(0,0,0,.02),rgba(0,0,0,.02)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23fdfaf4'/%3E%3Cpath d='M0 0L200 200M200 0L0 200' stroke='%23e8e2d3' stroke-width='0.5'/%3E%3C/svg%3E");
+  padding:1.6rem 2rem;
+  border-radius:14px;
+  box-shadow:0 12px 35px rgba(0,0,0,.45);
+}
 
-  .top { display: grid; grid-template-columns: 220px 1fr; gap: 1rem; }
+/* PRINT MODE */
+@media print{
+  body{background:white}
+  .sheet{box-shadow:none;border-radius:0}
+  .controls{display:none}
+  details{open:true}
+}
 
-  .portrait img { width: 100%; border-radius: 12px; border: 3px solid #333; }
+.controls{
+  display:flex;
+  justify-content:space-between;
+  gap:.5rem;
+  margin-bottom:.5rem;
+}
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.6rem; }
+button{
+  padding:.35rem .7rem;
+  font-size:.7rem;
+  border-radius:6px;
+  border:1px solid var(--line);
+  background:#eee;
+  cursor:pointer;
+}
 
-  .abilities { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; }
+h1{
+  text-align:center;
+  letter-spacing:.05em;
+  margin:.2rem 0 .8rem;
+}
 
-  .ability {
-    background: #e6e1d7;
-    padding: 0.4rem;
-    border-radius: 6px;
-    text-align: center;
-    border: 1px solid #999;
-  }
+details{
+  margin-bottom:.6rem;
+}
 
-  .combat { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; align-items: end; }
+summary{
+  font-size:.85rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  border-bottom:1px solid var(--line);
+  padding-bottom:.3rem;
+  cursor:pointer;
+  list-style:none;
+}
 
-  table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
-  th, td { border: 1px solid #888; padding: 0.35rem; text-align: center; }
-  th { background: #e6e1d7; }
+summary::-webkit-details-marker{display:none}
 
-  .checkbox-row { display: flex; gap: 0.75rem; margin: 0.4rem 0; }
+label{
+  font-size:.65rem;
+  text-transform:uppercase;
+  color:var(--muted);
+}
 
-  .gold-box { max-width: 200px; margin: auto; }
+input, textarea{
+  width:100%;
+  padding:.4rem;
+  border:1px solid var(--line);
+  border-radius:6px;
+  font-size:.8rem;
+  background:var(--paper);
+  color:var(--ink);
+}
 
-  button { padding: 0.35rem 0.7rem; margin-top: 0.5rem; font-weight: bold; }
+textarea{min-height:60px}
 
-  footer { text-align: center; margin-top: 1rem; font-size: 0.75rem; opacity: 0.7; }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:.5rem;
+}
 
-  .mod-input { width: 50px; font-weight: bold; text-align: center; }
+.top{
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:1rem;
+}
 
-  #hp-bar { height: 100%; width: 100%; background: green; transition: width 0.2s, background 0.2s; }
+.portrait img{
+  width:100%;
+  aspect-ratio:3/4;
+  border-radius:12px;
+  border:2px solid var(--line);
+  display:none;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:.75rem;
+}
+
+th,td{
+  border:1px solid var(--line);
+  padding:.3rem;
+}
+
+th{
+  background:#e9e5da;
+  text-transform:uppercase;
+  font-size:.65rem;
+}
+
+.bar{
+  height:18px;
+  background:#333;
+  border-radius:999px;
+  overflow:hidden;
+  margin:.3rem 0 .6rem;
+}
+
+.fill{height:100%;width:0%;transition:.2s}
+
+footer{
+  text-align:center;
+  font-size:.6rem;
+  opacity:.6;
+  margin-top:.8rem;
+}
 </style>
 </head>
 
 <body>
+
 <div class="sheet">
 
-<h1>Sturdy Bench</h1>
+<div class="controls">
+  <button onclick="document.body.classList.toggle('dark')">🌙 Toggle Dark</button>
+  <button onclick="window.print()">🖨 Print / PDF</button>
+</div>
 
-<!-- TOP -->
+<h1>D&D Character Sheet</h1>
+
 <div class="top">
   <div class="portrait">
-    <img src="sturdybench.png" alt="Sturdy Bench">
+    <img id="portrait">
+    <input type="file" id="portraitUpload" accept="image/*">
   </div>
   <div class="grid">
-    <div><label>Name</label><input data-save value="Sturdy Bench"></div>
-    <div><label>Class & Level</label><input data-save id="class-level"></div>
+    <div><label>Name</label><input data-save></div>
+    <div><label>Class & Level</label><input id="level" data-save></div>
     <div><label>Race</label><input data-save></div>
     <div><label>Background</label><input data-save></div>
     <div><label>Alignment</label><input data-save></div>
@@ -91,322 +193,84 @@
   </div>
 </div>
 
-<!-- CHARACTER DETAILS -->
-<h2>Character Details</h2>
+<details open>
+<summary>Character & Backstory</summary>
 <div class="grid">
   <div><label>Age</label><input data-save></div>
   <div><label>Eyes</label><input data-save></div>
   <div><label>Height</label><input data-save></div>
   <div><label>Skin</label><input data-save></div>
 </div>
-<label>Backstory</label>
-<textarea data-save placeholder="Write your character's backstory here..."></textarea>
+<textarea data-save placeholder="Backstory"></textarea>
+</details>
 
-<!-- ABILITIES -->
-<h2>Ability Scores</h2>
-<div class="abilities">
-  <div class="ability">
-    <label>STR</label>
-    <input type="number" data-ability="str" data-save>
-    <div>Mod: <input type="number" data-mod="str" data-save class="mod-input"></div>
-  </div>
-  <div class="ability">
-    <label>DEX</label>
-    <input type="number" data-ability="dex" data-save>
-    <div>Mod: <input type="number" data-mod="dex" data-save class="mod-input"></div>
-  </div>
-  <div class="ability">
-    <label>CON</label>
-    <input type="number" data-ability="con" data-save>
-    <div>Mod: <input type="number" data-mod="con" data-save class="mod-input"></div>
-  </div>
-  <div class="ability">
-    <label>INT</label>
-    <input type="number" data-ability="int" data-save>
-    <div>Mod: <input type="number" data-mod="int" data-save class="mod-input"></div>
-  </div>
-  <div class="ability">
-    <label>WIS</label>
-    <input type="number" data-ability="wis" data-save>
-    <div>Mod: <input type="number" data-mod="wis" data-save class="mod-input"></div>
-  </div>
-  <div class="ability">
-    <label>CHA</label>
-    <input type="number" data-ability="cha" data-save>
-    <div>Mod: <input type="number" data-mod="cha" data-save class="mod-input"></div>
-  </div>
+<details open>
+<summary>Combat</summary>
+<div class="grid">
+  <div><label>AC</label><input data-save></div>
+  <div><label>Initiative</label><input data-save></div>
+  <div><label>Speed</label><input data-save></div>
+  <div><label>HP Max</label><input id="hpMax" data-save></div>
+  <div><label>Current HP</label><input id="hpCur" data-save></div>
 </div>
+<div class="bar"><div id="hpBar" class="fill" style="background:green"></div></div>
+</details>
 
-<!-- COMBAT -->
-<h2>Combat</h2>
-<div class="combat">
-  <div><label>AC</label><input data-save id="ac"></div>
-  <div><label>Initiative</label><input data-save id="initiative"></div>
-  <div><label>Speed</label><input data-save id="speed"></div>
-  <div><label>HP Max</label><input data-save id="hp-max" type="number"></div>
-  <div><label>Current HP</label><input data-save id="hp-current" type="number"></div>
-  <div><label>Temp HP</label><input data-save id="hp-temp" type="number"></div>
-  <div><label>Block</label><input data-save id="block" type="number"></div>
-</div>
-
-<div style="margin: 0.5rem 0;">
-  <label>HP Bar</label>
-  <div style="width: 100%; height: 25px; background: #888; border-radius: 8px; overflow: hidden;">
-    <div id="hp-bar"></div>
-  </div>
-</div>
-
-<!-- DEATH SAVES -->
-<h2>Death Saving Throws</h2>
-<label>Successes</label>
-<div class="checkbox-row">
-  <input type="checkbox" data-save>
-  <input type="checkbox" data-save>
-  <input type="checkbox" data-save>
-</div>
-<label>Failures</label>
-<div class="checkbox-row">
-  <input type="checkbox" data-save>
-  <input type="checkbox" data-save>
-  <input type="checkbox" data-save>
-</div>
-
-<!-- WEAPONS -->
-<h2>Weapons</h2>
-<table>
-<tr><th>Name</th><th>Attack</th><th>Damage / Type</th></tr>
-<tr><td><input data-save></td><td><input data-save></td><td><input data-save></td></tr>
-<tr><td><input data-save></td><td><input data-save></td><td><input data-save></td></tr>
-<tr><td><input data-save></td><td><input data-save></td><td><input data-save></td></tr>
-</table>
-
-<!-- ARMOR -->
-<h2>Armor & Equipment</h2>
-<textarea data-save placeholder="Armor worn, shield, magic items, gear..."></textarea>
-
-<!-- GOLD -->
-<h2>Gold</h2>
-<div class="gold-box">
-  <input data-save placeholder="Gold Pieces (GP)">
-</div>
-
-<!-- RACIAL -->
-<h2>Racial Abilities (1 / Day)</h2>
-<div class="checkbox-row">
-  <label><input type="checkbox" class="racial" data-save> Racial Ability 1</label>
-  <label><input type="checkbox" class="racial" data-save> Racial Ability 2</label>
-</div>
-<button id="reset-racial">New Day (Reset)</button>
-<textarea data-save placeholder="Describe racial abilities..."></textarea>
-
-<!-- PERSONALITY -->
-<h2>Personality</h2>
-<label>Traits</label><textarea data-save></textarea>
-<label>Ideals</label><textarea data-save></textarea>
-<label>Bonds</label><textarea data-save></textarea>
-<label>Flaws</label><textarea data-save></textarea>
-
-<!-- NOTES -->
-<h2>Notes / Spells / Features</h2>
+<details>
+<summary>Equipment & Gold</summary>
 <textarea data-save></textarea>
+<input data-save placeholder="Gold (GP)">
+</details>
 
-<!-- SKILLS -->
-<h2>Skills</h2>
-<table id="skills-table">
-<tr><th>Skill</th><th>Ability</th><th>Prof</th><th>Total</th></tr>
-<tr data-skill="Acrobatics" data-ability="dex"><td>Acrobatics</td><td>DEX</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Animal Handling" data-ability="wis"><td>Animal Handling</td><td>WIS</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Arcana" data-ability="int"><td>Arcana</td><td>INT</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Athletics" data-ability="str"><td>Athletics</td><td>STR</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Deception" data-ability="cha"><td>Deception</td><td>CHA</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="History" data-ability="int"><td>History</td><td>INT</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Insight" data-ability="wis"><td>Insight</td><td>WIS</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Intimidation" data-ability="cha"><td>Intimidation</td><td>CHA</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Investigation" data-ability="int"><td>Investigation</td><td>INT</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Medicine" data-ability="wis"><td>Medicine</td><td>WIS</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Nature" data-ability="int"><td>Nature</td><td>INT</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Perception" data-ability="wis"><td>Perception</td><td>WIS</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Performance" data-ability="cha"><td>Performance</td><td>CHA</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Persuasion" data-ability="cha"><td>Persuasion</td><td>CHA</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Religion" data-ability="int"><td>Religion</td><td>INT</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Sleight of Hand" data-ability="dex"><td>Sleight of Hand</td><td>DEX</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Stealth" data-ability="dex"><td>Stealth</td><td>DEX</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-<tr data-skill="Survival" data-ability="wis"><td>Survival</td><td>WIS</td><td><input type="checkbox" data-save class="prof"></td><td><input data-save class="total" readonly></td></tr>
-</table>
+<details>
+<summary>Spells</summary>
+<textarea data-save></textarea>
+</details>
 
-<!-- BACKUP & RESTORE -->
-<h2>Backup & Restore</h2>
-<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-  <button id="backup-btn">Backup Sheet</button>
-  <input type="file" id="restore-file" accept=".json" style="display:none;">
-  <button id="restore-btn">Restore Sheet</button>
+<footer>Autosaves locally • Offline • Printable</footer>
 </div>
-
-<footer>Autosaves locally • Offline ready</footer>
 
 <script>
-// AUTOSAVE
-document.querySelectorAll("[data-save]").forEach((field, i) => {
-  const key = "sturdybench_" + i;
-  if (field.type === "checkbox") {
-    field.checked = localStorage.getItem(key) === "true";
-    field.addEventListener("change", () => localStorage.setItem(key, field.checked));
-  } else {
-    field.value = localStorage.getItem(key) || field.value || "";
-    field.addEventListener("input", () => localStorage.setItem(key, field.value));
+/* AUTOSAVE */
+document.querySelectorAll("[data-save]").forEach((f,i)=>{
+  const k="cs_"+i;
+  if(f.type==="checkbox"){
+    f.checked=localStorage.getItem(k)==="true";
+    f.onchange=()=>localStorage.setItem(k,f.checked);
+  }else{
+    f.value=localStorage.getItem(k)||"";
+    f.oninput=()=>localStorage.setItem(k,f.value);
   }
 });
 
-// MANUAL MODIFIERS
-const manualMods = {};
-document.querySelectorAll(".mod-input").forEach(modInput => {
-  const key = modInput.dataset.mod;
-  manualMods[key] = false;
-  modInput.value = localStorage.getItem("mod_" + key) || "";
-  modInput.addEventListener("input", () => {
-    manualMods[key] = modInput.value !== "";
-    localStorage.setItem("mod_" + key, modInput.value);
-    updateSkills();
-  });
-});
+/* PORTRAIT */
+const img=document.getElementById("portrait");
+const up=document.getElementById("portraitUpload");
+const saved=localStorage.getItem("portrait");
+if(saved){img.src=saved;img.style.display="block";}
+up.onchange=()=>{
+  const r=new FileReader();
+  r.onload=e=>{
+    img.src=e.target.result;
+    img.style.display="block";
+    localStorage.setItem("portrait",e.target.result);
+  }
+  r.readAsDataURL(up.files[0]);
+};
 
-// UPDATE MODIFIERS
-function updateMods() {
-  document.querySelectorAll("[data-ability]").forEach(input => {
-    const key = input.dataset.ability;
-    if (!manualMods[key]) {
-      const score = parseInt(input.value);
-      const mod = !isNaN(score) ? Math.floor((score - 10) / 2) : 0;
-      const modInput = document.querySelector(`[data-mod="${key}"]`);
-      modInput.value = mod;
-      localStorage.setItem("mod_" + key, mod);
-    }
-  });
-  updateSkills();
+/* HP BAR */
+const hpMax=document.getElementById("hpMax"),
+      hpCur=document.getElementById("hpCur"),
+      hpBar=document.getElementById("hpBar");
+
+function updateHP(){
+  const m=+hpMax.value||1,c=+hpCur.value||0;
+  hpBar.style.width=Math.min(100,c/m*100)+"%";
+  hpBar.style.background=c/m>0.5?"green":c/m>0.25?"gold":"red";
 }
-
-// PROFICIENCY BONUS
-function getProfBonus() {
-  const cl = document.getElementById("class-level").value || "1";
-  const level = parseInt(cl.split(/\D/)[1] || cl) || 1;
-  if (level >= 17) return 6;
-  if (level >= 13) return 5;
-  if (level >= 9) return 4;
-  if (level >= 5) return 3;
-  return 2;
-}
-
-// UPDATE SKILLS
-function updateSkills() {
-  const profBonus = getProfBonus();
-  document.querySelectorAll("#skills-table tr[data-skill]").forEach(row => {
-    const ability = row.dataset.ability;
-    const mod = parseInt(document.querySelector(`[data-mod="${ability}"]`).value) || 0;
-    const prof = row.querySelector(".prof").checked ? profBonus : 0;
-    const total = mod + prof;
-    row.querySelector(".total").value = (total >= 0 ? "+" : "") + total;
-  });
-}
-
-// RACIAL ABILITY LIMITER
-const racials = document.querySelectorAll(".racial");
-racials.forEach(box => {
-  box.addEventListener("change", () => {
-    if (box.checked) racials.forEach(o => { if (o !== box) o.disabled = true; });
-  });
-});
-document.getElementById("reset-racial").onclick = () => racials.forEach(b => { b.checked = false; b.disabled = false; });
-
-// HEALTH BAR
-function updateHPBar() {
-  const maxHP = parseInt(document.getElementById("hp-max").value) || 1;
-  const currentHP = parseInt(document.getElementById("hp-current").value) || 0;
-  const tempHP = parseInt(document.getElementById("hp-temp").value) || 0;
-  const effectiveHP = currentHP + tempHP;
-  const percent = Math.max(0, Math.min(100, (effectiveHP / maxHP) * 100));
-  const bar = document.getElementById("hp-bar");
-  bar.style.width = percent + "%";
-  if (percent > 50) bar.style.background = "green";
-  else if (percent > 25) bar.style.background = "yellow";
-  else bar.style.background = "red";
-}
-
-["hp-max","hp-current","hp-temp","block"].forEach(id => {
-  const el = document.getElementById(id);
-  el.addEventListener("input", () => {
-    updateHPBar();
-    localStorage.setItem("sturdybench_" + id, el.value);
-  });
-  el.value = localStorage.getItem("sturdybench_" + id) || "";
-});
-
-// EVENT LISTENERS
-document.querySelectorAll("[data-ability]").forEach(i => i.addEventListener("input", updateMods));
-document.querySelectorAll(".prof").forEach(c => c.addEventListener("change", updateSkills));
-document.getElementById("class-level").addEventListener("input", updateSkills);
-
-window.addEventListener("DOMContentLoaded", () => {
-  updateMods();
-  updateSkills();
-  updateHPBar();
-});
-
-// BACKUP
-document.getElementById("backup-btn").addEventListener("click", () => {
-  const allData = {};
-  document.querySelectorAll("[data-save]").forEach((el, i) => {
-    if (el.type === "checkbox") allData[i] = el.checked;
-    else allData[i] = el.value;
-  });
-  document.querySelectorAll(".mod-input").forEach((el) => {
-    allData["mod_" + el.dataset.mod] = el.value;
-  });
-  const blob = new Blob([JSON.stringify(allData)], {type: "application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "sturdybench_backup.json";
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
-// RESTORE
-document.getElementById("restore-btn").addEventListener("click", () => {
-  document.getElementById("restore-file").click();
-});
-document.getElementById("restore-file").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    try {
-      const data = JSON.parse(event.target.result);
-      document.querySelectorAll("[data-save]").forEach((el, i) => {
-        if (data.hasOwnProperty(i)) {
-          if (el.type === "checkbox") el.checked = data[i];
-          else el.value = data[i];
-          el.dispatchEvent(new Event('input'));
-        }
-      });
-      document.querySelectorAll(".mod-input").forEach((el) => {
-        const key = "mod_" + el.dataset.mod;
-        if (data.hasOwnProperty(key)) {
-          el.value = data[key];
-          el.dispatchEvent(new Event('input'));
-        }
-      });
-      updateMods();
-      updateSkills();
-      updateHPBar();
-      alert("Sheet restored successfully!");
-    } catch (err) {
-      alert("Error restoring sheet: " + err);
-    }
-  };
-  reader.readAsText(file);
-});
+[hpMax,hpCur].forEach(e=>e.oninput=updateHP);
+updateHP();
 </script>
 
 </body>
 </html>
-
