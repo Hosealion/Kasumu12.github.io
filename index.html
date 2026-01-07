@@ -1,153 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Science Project</title>
-    <style>
-        body {
-            font-family: Helvetica, sans-serif;
-            background-color: black;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            text-align: center;
-            color: white;
-            min-height: 100vh;
-            padding: 5%;
-            position: relative;
-        }
-        
-        .brick-container {
-            background-color: #5A5A5A;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: auto;
-            width: 60%;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sturdy Bench – Character Sheet</title>
 
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 100px;
-            height: auto;
-        }
+<style>
+  body {
+    background: #2e3328;
+    font-family: Georgia, serif;
+    padding: 1rem;
+  }
 
-        h1.georama-brinc {
-            font-family: "Georama", sans-serif;
-            font-size: 3em;
-            margin: 10px 0;
-        }
+  .sheet {
+    max-width: 1100px;
+    margin: auto;
+    background: #fdfaf4;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,.4);
+  }
 
-        h1.subtitle {
-            font-size: 1.5em;
-            margin-top: -10px;
-            color: #bbb;
-        }
+  h1, h2 { text-align: center; }
+  h2 { border-bottom: 2px solid #333; margin-top: 1.4rem; }
 
-        img {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            margin: 20px auto;
-            border-radius: 20px;
-        }
+  label { font-weight: bold; font-size: 0.8rem; }
 
-        a img:hover {
-            transform: scale(1.05);
-            transition: transform 0.7s ease-in-out;
-        }
+  input, textarea {
+    width: 100%;
+    padding: 0.4rem;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    border: 1px solid #999;
+  }
 
-        p {
-            font-size: 1.5em;
-            margin: 10px 0;
-        }
+  textarea { min-height: 60px; resize: vertical; }
 
-        button {
-            font-size: 1.2em;
-            padding: 10px 20px;
-            margin-top: 20px;
-            cursor: pointer;
-            border-radius: 10px;
-            border: none;
-            background-color: #555;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
+  .top {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1rem;
+  }
 
-        button:hover {
-            background-color: #777;
-        }
+  .portrait img {
+    width: 100%;
+    border-radius: 12px;
+    border: 3px solid #333;
+    display: none;
+  }
 
-        /* Responsive styles for smaller screens */
-        @media (max-width: 768px) {
-            h1.georama-brinc {
-                font-size: 2.5em;
-            }
-            h1.subtitle {
-                font-size: 1.2em;
-            }
-            img {
-                width: 80%;
-            }
-            p {
-                font-size: 1.2em;
-            }
-            button {
-                font-size: 1em;
-                padding: 8px 16px;
-            }
-        }
+  #portrait-upload {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+  }
 
-        @media (max-width: 480px) {
-            .logo {
-                width: 80px;
-            }
-            h1.georama-brinc {
-                font-size: 2em;
-            }
-            h1.subtitle {
-                font-size: 1em;
-            }
-            p {
-                font-size: 1em;
-            }
-            button {
-                font-size: 0.9em;
-                padding: 6px 12px;
-            }
-        }
-    </style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .abilities {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+  }
+
+  .ability {
+    background: #e6e1d7;
+    padding: 0.4rem;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #999;
+  }
+
+  .mod-input {
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+</style>
 </head>
+
 <body>
-    <img src="Logo.png" alt="logo Image" class="logo">
+<div class="sheet">
 
-    <h1 class="georama-brinc">Brick.CO</h1>
-    <h1 class="subtitle">Founded by Migual and Tigger</h1>
+<h1>Character Sheet</h1>
 
-<div class="brick-container">
-    <h1 class="georama-brinc" style="font-size: 2em;">Brick Pro</h1>
-    <a href="webapge.html">
-        <img src="https://www.pngall.com/wp-content/uploads/15/Lego-Brick-PNG-Images.png" alt="Brick Pro Image" style="max-width: 450px;">
-    </a>
-    <p>A 4 by 2 Masterpiece</p>
+<!-- TOP -->
+<div class="top">
+  <div class="portrait">
+    <img id="char-portrait" alt="Character Portrait">
+    <input type="file" id="portrait-upload" accept="image/*">
+  </div>
+
+  <div class="grid">
+    <div><label>Name</label><input data-save></div>
+    <div><label>Class & Level</label><input data-save id="class-level"></div>
+    <div><label>Race</label><input data-save></div>
+    <div><label>Background</label><input data-save></div>
+    <div><label>Alignment</label><input data-save></div>
+    <div><label>Player</label><input data-save></div>
+  </div>
 </div>
 
-<div style="margin-top:15%;" class="brick-container">
-    <h1 class="georama-brinc" style="font-size: 2em;">Brick Lite</h1>
-    <a href="webapge.html">
-        <img src="https://cdn.rebrickable.com/media/parts/ldraw/4/3003.png" alt="Brick Lite Image" style="max-width: 400px;">
-    </a>
-    <p>A 2 by 2 Luxury</p>
-    
+<!-- CHARACTER DETAILS -->
+<h2>Character Details</h2>
+<div class="grid">
+  <div><label>Age</label><input data-save></div>
+  <div><label>Eyes</label><input data-save></div>
+  <div><label>Height</label><input data-save></div>
+  <div><label>Skin</label><input data-save></div>
 </div>
-    
-    <button onclick="window.location.href='OurCompany.html'">Our Company</button>
-    <button onclick="window.location.href='Support.html'">Support</button>
-    
+
+<label>Backstory</label>
+<textarea data-save></textarea>
+
+<footer>Autosaves locally • Offline ready</footer>
+
+<script>
+// AUTOSAVE FIELDS
+document.querySelectorAll("[data-save]").forEach((field, i) => {
+  const key = "sturdybench_" + i;
+  if (field.type === "checkbox") {
+    field.checked = localStorage.getItem(key) === "true";
+    field.addEventListener("change", () => localStorage.setItem(key, field.checked));
+  } else {
+    field.value = localStorage.getItem(key) || "";
+    field.addEventListener("input", () => localStorage.setItem(key, field.value));
+  }
+});
+
+// PORTRAIT UPLOAD + SAVE
+const portraitImg = document.getElementById("char-portrait");
+const portraitUpload = document.getElementById("portrait-upload");
+
+const savedPortrait = localStorage.getItem("sturdybench_portrait");
+if (savedPortrait) {
+  portraitImg.src = savedPortrait;
+  portraitImg.style.display = "block";
+}
+
+portraitUpload.addEventListener("change", () => {
+  const file = portraitUpload.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    portraitImg.src = e.target.result;
+    portraitImg.style.display = "block";
+    localStorage.setItem("sturdybench_portrait", e.target.result);
+  };
+  reader.readAsDataURL(file);
+});
+</script>
+
 </body>
 </html>
