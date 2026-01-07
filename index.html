@@ -1,11 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>D&D Character Sheet</title>
-
+<title>Full D&D Character Sheet</title>
 <style>
 :root{
   --bg:#2b2f26;
@@ -16,119 +14,92 @@
   --line:#c9c4b8;
 }
 
-/* DARK MODE */
-body.dark{
-  --bg:#111;
-  --paper:#1e1e1e;
-  --ink:#eee;
-  --muted:#aaa;
-  --line:#444;
-}
-
 *{box-sizing:border-box}
 
 body{
   background:var(--bg);
-  font-family:Inter,system-ui,sans-serif;
-  margin:0;
-  padding:.25rem;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
+  padding:.75rem;
   color:var(--ink);
 }
 
 .sheet{
-  width:100%;
-  max-width:1800px;
+  max-width:1100px;
   margin:auto;
-  background:
-    linear-gradient(rgba(0,0,0,.02),rgba(0,0,0,.02)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23fdfaf4'/%3E%3Cpath d='M0 0L200 200M200 0L0 200' stroke='%23e8e2d3' stroke-width='0.5'/%3E%3C/svg%3E");
-  padding:1.6rem 2rem;
-  border-radius:14px;
-  box-shadow:0 12px 35px rgba(0,0,0,.45);
-}
-
-/* PRINT MODE */
-@media print{
-  body{background:white}
-  .sheet{box-shadow:none;border-radius:0}
-  .controls{display:none}
-  details{open:true}
-}
-
-.controls{
-  display:flex;
-  justify-content:space-between;
-  gap:.5rem;
-  margin-bottom:.5rem;
-}
-
-button{
-  padding:.35rem .7rem;
-  font-size:.7rem;
-  border-radius:6px;
-  border:1px solid var(--line);
-  background:#eee;
-  cursor:pointer;
+  background:var(--paper);
+  padding:1rem 1.2rem;
+  border-radius:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,.35);
 }
 
 h1{
-  text-align:center;
+  font-size:1.5rem;
+  margin:.2rem 0 .6rem;
   letter-spacing:.05em;
-  margin:.2rem 0 .8rem;
+  text-align:center;
 }
 
-details{
-  margin-bottom:.6rem;
-}
-
-summary{
-  font-size:.85rem;
+h2{
+  font-size:.9rem;
   text-transform:uppercase;
   letter-spacing:.08em;
+  margin:.8rem 0 .4rem;
   border-bottom:1px solid var(--line);
-  padding-bottom:.3rem;
-  cursor:pointer;
-  list-style:none;
+  padding-bottom:.2rem;
+  color:#333;
 }
-
-summary::-webkit-details-marker{display:none}
 
 label{
   font-size:.65rem;
   text-transform:uppercase;
+  letter-spacing:.05em;
   color:var(--muted);
+  margin-bottom:.15rem;
 }
 
 input, textarea{
   width:100%;
-  padding:.4rem;
+  padding:.35rem .4rem;
   border:1px solid var(--line);
   border-radius:6px;
   font-size:.8rem;
-  background:var(--paper);
-  color:var(--ink);
+  background:#fff;
 }
 
-textarea{min-height:60px}
+textarea{
+  resize:vertical;
+  min-height:50px;
+}
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:.5rem;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:.4rem;
 }
 
 .top{
   display:grid;
-  grid-template-columns:200px 1fr;
-  gap:1rem;
+  grid-template-columns:160px 1fr;
+  gap:.8rem;
+  margin-bottom:.6rem;
 }
 
 .portrait img{
   width:100%;
   aspect-ratio:3/4;
-  border-radius:12px;
-  border:2px solid var(--line);
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid #333;
   display:none;
+}
+
+button{
+  padding:.3rem .6rem;
+  font-size:.7rem;
+  border-radius:6px;
+  border:1px solid var(--line);
+  background:#eee;
+  cursor:pointer;
 }
 
 table{
@@ -139,45 +110,51 @@ table{
 
 th,td{
   border:1px solid var(--line);
-  padding:.3rem;
+  padding:.25rem;
 }
 
 th{
   background:#e9e5da;
-  text-transform:uppercase;
   font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
 }
 
 .bar{
-  height:18px;
+  height:16px;
   background:#333;
   border-radius:999px;
   overflow:hidden;
-  margin:.3rem 0 .6rem;
+  margin:.25rem 0 .5rem;
 }
 
-.fill{height:100%;width:0%;transition:.2s}
+.fill{
+  height:100%;
+  width:0%;
+  transition:width .2s;
+}
+
+.checkbox-row{
+  display:flex;
+  gap:.4rem;
+  flex-wrap:wrap;
+  margin:.2rem 0;
+}
 
 footer{
   text-align:center;
   font-size:.6rem;
+  margin-top:.6rem;
   opacity:.6;
-  margin-top:.8rem;
 }
 </style>
 </head>
-
 <body>
 
 <div class="sheet">
-
-<div class="controls">
-  <button onclick="document.body.classList.toggle('dark')">🌙 Toggle Dark</button>
-  <button onclick="window.print()">🖨 Print / PDF</button>
-</div>
-
 <h1>D&D Character Sheet</h1>
 
+<!-- TOP -->
 <div class="top">
   <div class="portrait">
     <img id="portrait">
@@ -185,7 +162,7 @@ footer{
   </div>
   <div class="grid">
     <div><label>Name</label><input data-save></div>
-    <div><label>Class & Level</label><input id="level" data-save></div>
+    <div><label>Class & Level</label><input data-save id="level"></div>
     <div><label>Race</label><input data-save></div>
     <div><label>Background</label><input data-save></div>
     <div><label>Alignment</label><input data-save></div>
@@ -193,84 +170,182 @@ footer{
   </div>
 </div>
 
-<details open>
-<summary>Character & Backstory</summary>
+<h2>Character Details</h2>
 <div class="grid">
   <div><label>Age</label><input data-save></div>
   <div><label>Eyes</label><input data-save></div>
   <div><label>Height</label><input data-save></div>
   <div><label>Skin</label><input data-save></div>
 </div>
-<textarea data-save placeholder="Backstory"></textarea>
-</details>
+<label>Backstory</label>
+<textarea data-save></textarea>
 
-<details open>
-<summary>Combat</summary>
+<h2>Ability Scores</h2>
+<table>
+<tr><th>Ability</th><th>Score</th><th>Modifier</th></tr>
+<tr><td>STR</td><td><input data-ability data-save></td><td><input data-mod data-save></td></tr>
+<tr><td>DEX</td><td><input data-ability data-save></td><td><input data-mod data-save></td></tr>
+<tr><td>CON</td><td><input data-ability data-save></td><td><input data-mod data-save></td></tr>
+<tr><td>INT</td><td><input data-ability data-save></td><td><input data-mod data-save></td></tr>
+<tr><td>WIS</td><td><input data-ability data-save></td><td><input data-mod data-save></td></tr>
+<tr><td>CHA</td><td><input data-ability data-save></td><td><input data-mod data-save></td></tr>
+</table>
+
+<h2>Combat</h2>
 <div class="grid">
   <div><label>AC</label><input data-save></div>
   <div><label>Initiative</label><input data-save></div>
   <div><label>Speed</label><input data-save></div>
-  <div><label>HP Max</label><input id="hpMax" data-save></div>
-  <div><label>Current HP</label><input id="hpCur" data-save></div>
+  <div><label>HP Max</label><input id="hpMax" type="number" data-save></div>
+  <div><label>Current HP</label><input id="hpCur" type="number" data-save></div>
+  <div><label>Temp HP</label><input id="hpTemp" type="number" data-save></div>
+  <div><label>Block</label><input type="number" data-save></div>
 </div>
 <div class="bar"><div id="hpBar" class="fill" style="background:green"></div></div>
-</details>
 
-<details>
-<summary>Equipment & Gold</summary>
-<textarea data-save></textarea>
-<input data-save placeholder="Gold (GP)">
-</details>
+<h2>Mana</h2>
+<div class="grid">
+  <div><label>Mana Max</label><input id="manaMax" data-save></div>
+  <div><label>Current Mana</label><input id="manaCur" data-save></div>
+</div>
+<div class="bar"><div id="manaBar" class="fill" style="background:#4aa3ff"></div></div>
 
-<details>
-<summary>Spells</summary>
-<textarea data-save></textarea>
-</details>
+<h2>Skills</h2>
+<table id="skills">
+<tr><th>Skill</th><th>Ability</th><th>Prof</th><th>Total</th></tr>
+<tr data-ability="dex"><td>Acrobatics</td><td>DEX</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="wis"><td>Animal Handling</td><td>WIS</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="int"><td>Arcana</td><td>INT</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="str"><td>Athletics</td><td>STR</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="cha"><td>Deception</td><td>CHA</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="int"><td>History</td><td>INT</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="wis"><td>Insight</td><td>WIS</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="cha"><td>Intimidation</td><td>CHA</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="int"><td>Investigation</td><td>INT</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="wis"><td>Medicine</td><td>WIS</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="int"><td>Nature</td><td>INT</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="wis"><td>Perception</td><td>WIS</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="cha"><td>Performance</td><td>CHA</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="cha"><td>Persuasion</td><td>CHA</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="int"><td>Religion</td><td>INT</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="dex"><td>Sleight of Hand</td><td>DEX</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="dex"><td>Stealth</td><td>DEX</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+<tr data-ability="wis"><td>Survival</td><td>WIS</td><td><input type="checkbox" class="prof" data-save></td><td><input class="total" readonly></td></tr>
+</table>
 
-<footer>Autosaves locally • Offline • Printable</footer>
+<h2>Weapons</h2>
+<table>
+<tr><th>Name</th><th>Attack</th><th>Damage / Type</th></tr>
+<tr><td><input data-save></td><td><input data-save></td><td><input data-save></td></tr>
+<tr><td><input data-save></td><td><input data-save></td><td><input data-save></td></tr>
+<tr><td><input data-save></td><td><input data-save></td><td><input data-save></td></tr>
+</table>
+
+<h2>Armor & Equipment</h2>
+<textarea data-save placeholder="Armor, shield, magic items, gear..."></textarea>
+
+<h2>Gold</h2>
+<input data-save placeholder="Gold Pieces (GP)">
+
+<h2>Death Saving Throws</h2>
+<label>Successes</label>
+<div class="checkbox-row">
+  <input type="checkbox" data-save>
+  <input type="checkbox" data-save>
+  <input type="checkbox" data-save>
+</div>
+<label>Failures</label>
+<div class="checkbox-row">
+  <input type="checkbox" data-save>
+  <input type="checkbox" data-save>
+  <input type="checkbox" data-save>
 </div>
 
+<h2>Racial Abilities</h2>
+<div class="checkbox-row">
+  <label><input type="checkbox" class="racial" data-save> Ability 1</label>
+  <label><input type="checkbox" class="racial" data-save> Ability 2</label>
+</div>
+<button id="resetRacial">New Day (Reset)</button>
+<textarea data-save placeholder="Describe racial abilities..."></textarea>
+
+<h2>Spells & Slots</h2>
+<textarea data-save placeholder="Spell notes"></textarea>
+
+<h2>Backup / Restore</h2>
+<button id="backup">Backup</button>
+<input type="file" id="restore">
+
+<footer>Autosaves locally • Offline ready</footer>
+
 <script>
-/* AUTOSAVE */
+// AUTOSAVE
 document.querySelectorAll("[data-save]").forEach((f,i)=>{
   const k="cs_"+i;
-  if(f.type==="checkbox"){
-    f.checked=localStorage.getItem(k)==="true";
-    f.onchange=()=>localStorage.setItem(k,f.checked);
-  }else{
-    f.value=localStorage.getItem(k)||"";
-    f.oninput=()=>localStorage.setItem(k,f.value);
-  }
+  if(f.type==="checkbox"){f.checked=localStorage.getItem(k)==="true";f.onchange=()=>localStorage.setItem(k,f.checked);}
+  else{f.value=localStorage.getItem(k)||"";f.oninput=()=>localStorage.setItem(k,f.value);}
 });
 
-/* PORTRAIT */
+// PORTRAIT
 const img=document.getElementById("portrait");
 const up=document.getElementById("portraitUpload");
-const saved=localStorage.getItem("portrait");
-if(saved){img.src=saved;img.style.display="block";}
+const savedImg=localStorage.getItem("portrait");
+if(savedImg){img.src=savedImg;img.style.display="block";}
 up.onchange=()=>{
   const r=new FileReader();
-  r.onload=e=>{
-    img.src=e.target.result;
-    img.style.display="block";
-    localStorage.setItem("portrait",e.target.result);
-  }
+  r.onload=e=>{img.src=e.target.result;img.style.display="block";localStorage.setItem("portrait",e.target.result);}
   r.readAsDataURL(up.files[0]);
 };
 
-/* HP BAR */
-const hpMax=document.getElementById("hpMax"),
-      hpCur=document.getElementById("hpCur"),
-      hpBar=document.getElementById("hpBar");
+// Racial reset
+document.getElementById("resetRacial").onclick=()=>{
+  document.querySelectorAll(".racial").forEach(b=>{b.checked=false;b.disabled=false;});
+};
 
-function updateHP(){
-  const m=+hpMax.value||1,c=+hpCur.value||0;
-  hpBar.style.width=Math.min(100,c/m*100)+"%";
-  hpBar.style.background=c/m>0.5?"green":c/m>0.25?"gold":"red";
-}
-[hpMax,hpCur].forEach(e=>e.oninput=updateHP);
-updateHP();
+// HP BAR
+const hpMax=document.getElementById("hpMax"),hpCur=document.getElementById("hpCur"),hpTemp=document.getElementById("hpTemp"),hpBar=document.getElementById("hpBar");
+function updateHP(){const m=+hpMax.value||1,c=+hpCur.value||0,t=+hpTemp.value||0;hpBar.style.width=Math.min(100,(c+t)/m*100)+"%";hpBar.style.background=(c+t)/m>0.5?"green":(c+t)/m>0.25?"yellow":"red";}
+[hpMax,hpCur,hpTemp].forEach(e=>e.oninput=updateHP);updateHP();
+
+// MANA BAR
+const manaMax=document.getElementById("manaMax"),manaCur=document.getElementById("manaCur"),manaBar=document.getElementById("manaBar");
+function updateMana(){const m=+manaMax.value||1,c=+manaCur.value||0;manaBar.style.width=Math.min(100,c/m*100)+"%";}
+[manaMax,manaCur].forEach(e=>e.oninput=updateMana);updateMana();
+
+// MODIFIERS + Skills
+document.querySelectorAll("[data-ability]").forEach(a=>{
+  a.oninput=()=>{
+    const val=+a.value||10;
+    const modInput=document.querySelector(`[data-mod][data-mod-ability="${a.dataset.ability}"]`);
+    if(modInput && !modInput.value) modInput.value=Math.floor((val-10)/2);
+    updateSkills();
+  };
+});
+
+function profBonus(){const l=+document.getElementById("level").value||1;return l>=17?6:l>=13?5:l>=9?4:l>=5?3:2;}
+function updateSkills(){document.querySelectorAll("#skills tr[data-ability]").forEach(r=>{
+  const modInput=document.querySelector(`[data-mod][data-mod-ability="${r.dataset.ability}"]`);
+  const mod=modInput?+modInput.value||0:0;
+  const prof=r.querySelector(".prof").checked?profBonus():0;
+  r.querySelector(".total").value=(mod+prof>=0?"+":"")+(mod+prof);
+});}
+document.querySelectorAll(".prof").forEach(p=>p.onchange=updateSkills);
+updateSkills();
+
+// BACKUP / RESTORE
+document.getElementById("backup").onclick=()=>{
+  const data={};
+  Object.keys(localStorage).forEach(k=>data[k]=localStorage[k]);
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data)]));
+  a.download="character-backup.json";a.click();
+};
+document.getElementById("restore").onchange=e=>{
+  const r=new FileReader();
+  r.onload=()=>{Object.entries(JSON.parse(r.result)).forEach(([k,v])=>localStorage.setItem(k,v));location.reload();};
+  r.readAsText(e.target.files[0]);
+};
 </script>
-
+</div>
 </body>
-</html>
+</html>  make the background part larger 
