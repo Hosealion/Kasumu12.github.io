@@ -31,13 +31,13 @@ body{
 }
 h1{text-align:center}
 label{font-size:.65rem;text-transform:uppercase;color:var(--muted)}
-input,textarea{
+input, textarea{
   width:100%;
   padding:.35rem .4rem;
   border:1px solid var(--line);
   border-radius:6px;
 }
-textarea{resize:vertical}
+textarea{resize:vertical;min-height:50px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.4rem}
 .top{display:grid;grid-template-columns:160px 1fr;gap:.8rem}
 table{width:100%;border-collapse:collapse;font-size:.75rem}
@@ -110,17 +110,13 @@ footer{text-align:center;font-size:.6rem;margin-top:.6rem;opacity:.6}
 </div>
 <div class="bar"><div id="manaBar" class="fill" style="background:#4aa3ff"></div></div>
 
-<!-- EVERYTHING BELOW IS UNCHANGED STRUCTURALLY -->
-
 <footer>Autosaves locally • Offline ready</footer>
 
 <script>
-/* ================= AUTOSAVE (FIXED) ================= */
+/* ========= AUTOSAVE (FIXED) ========= */
 document.addEventListener("DOMContentLoaded",()=>{
   document.querySelectorAll("[data-save]").forEach(el=>{
-    if(!el.id) return;
     const key="cs_"+el.id;
-
     if(el.type==="checkbox"){
       el.checked=localStorage.getItem(key)==="true";
       el.addEventListener("change",()=>localStorage.setItem(key,el.checked));
@@ -131,7 +127,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   });
 });
 
-/* ================= PORTRAIT ================= */
+/* ========= PORTRAIT ========= */
 const img=document.getElementById("portrait");
 const up=document.getElementById("portraitUpload");
 const savedImg=localStorage.getItem("portrait");
@@ -146,7 +142,7 @@ up.onchange=()=>{
   r.readAsDataURL(up.files[0]);
 };
 
-/* ================= HP BAR ================= */
+/* ========= HP BAR ========= */
 function updateHP(){
   const m=+hpMax.value||1,c=+hpCur.value||0,t=+hpTemp.value||0;
   const p=(c+t)/m;
@@ -155,14 +151,14 @@ function updateHP(){
 }
 [hpMax,hpCur,hpTemp].forEach(e=>e.oninput=updateHP);updateHP();
 
-/* ================= MANA BAR ================= */
+/* ========= MANA BAR ========= */
 function updateMana(){
   const m=+manaMax.value||1,c=+manaCur.value||0;
   manaBar.style.width=Math.min(100,c/m*100)+"%";
 }
 [manaMax,manaCur].forEach(e=>e.oninput=updateMana);updateMana();
 
-/* ================= MODIFIERS ================= */
+/* ========= MODIFIERS ========= */
 document.querySelectorAll("[data-ability]").forEach(a=>{
   a.oninput=()=>{
     const mod=Math.floor(((+a.value||10)-10)/2);
