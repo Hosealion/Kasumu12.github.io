@@ -17,30 +17,35 @@
 *{box-sizing:border-box}
 body{
   background:var(--bg);
-  font-family:system-ui,sans-serif;
+  font-family:"Inter","Segoe UI",system-ui,sans-serif;
   padding:.75rem;
+  color:var(--ink);
 }
 .sheet{
   max-width:1100px;
   margin:auto;
   background:var(--paper);
-  padding:1rem;
+  padding:1rem 1.2rem;
   border-radius:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,.35);
 }
 h1{text-align:center}
-label{font-size:.65rem;text-transform:uppercase;color:#666}
+label{font-size:.65rem;text-transform:uppercase;color:var(--muted)}
 input,textarea{
   width:100%;
-  padding:.35rem;
-  border:1px solid #ccc;
+  padding:.35rem .4rem;
+  border:1px solid var(--line);
   border-radius:6px;
 }
+textarea{resize:vertical}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.4rem}
 .top{display:grid;grid-template-columns:160px 1fr;gap:.8rem}
 table{width:100%;border-collapse:collapse;font-size:.75rem}
-th,td{border:1px solid #ccc;padding:.25rem}
+th,td{border:1px solid var(--line);padding:.25rem}
 .bar{height:16px;background:#333;border-radius:999px;overflow:hidden}
-.fill{height:100%;width:0%}
+.fill{height:100%;width:0%;transition:.2s}
+.checkbox-row{display:flex;gap:.4rem;flex-wrap:wrap}
+footer{text-align:center;font-size:.6rem;margin-top:.6rem;opacity:.6}
 </style>
 </head>
 
@@ -49,9 +54,10 @@ th,td{border:1px solid #ccc;padding:.25rem}
 
 <h1>D&D Character Sheet</h1>
 
+<!-- TOP -->
 <div class="top">
-  <div>
-    <img id="portrait" style="display:none;width:100%;border-radius:8px">
+  <div class="portrait">
+    <img id="portrait">
     <input type="file" id="portraitUpload" accept="image/*">
   </div>
   <div class="grid">
@@ -64,6 +70,16 @@ th,td{border:1px solid #ccc;padding:.25rem}
   </div>
 </div>
 
+<h2>Character Details</h2>
+<div class="grid">
+  <div><label>Age</label><input id="age" data-save></div>
+  <div><label>Eyes</label><input id="eyes" data-save></div>
+  <div><label>Height</label><input id="height" data-save></div>
+  <div><label>Skin</label><input id="skin" data-save></div>
+</div>
+<label>Backstory</label>
+<textarea id="backstory" data-save></textarea>
+
 <h2>Ability Scores</h2>
 <table>
 <tr><th>Ability</th><th>Score</th><th>Modifier</th></tr>
@@ -75,45 +91,47 @@ th,td{border:1px solid #ccc;padding:.25rem}
 <tr><td>CHA</td><td><input id="cha" data-ability="cha" data-save></td><td><input id="chaMod" data-mod data-mod-ability="cha" data-save></td></tr>
 </table>
 
-<h2>HP</h2>
+<h2>Combat</h2>
 <div class="grid">
+  <div><label>AC</label><input id="ac" data-save></div>
+  <div><label>Initiative</label><input id="initiative" data-save></div>
+  <div><label>Speed</label><input id="speed" data-save></div>
   <div><label>HP Max</label><input id="hpMax" type="number" data-save></div>
   <div><label>Current HP</label><input id="hpCur" type="number" data-save></div>
   <div><label>Temp HP</label><input id="hpTemp" type="number" data-save></div>
+  <div><label>Block</label><input id="block" type="number" data-save></div>
 </div>
 <div class="bar"><div id="hpBar" class="fill" style="background:green"></div></div>
 
-<footer style="text-align:center;font-size:.6rem;margin-top:.6rem">
-Autosaves locally • Offline ready
-</footer>
+<h2>Mana</h2>
+<div class="grid">
+  <div><label>Mana Max</label><input id="manaMax" data-save></div>
+  <div><label>Current Mana</label><input id="manaCur" data-save></div>
+</div>
+<div class="bar"><div id="manaBar" class="fill" style="background:#4aa3ff"></div></div>
+
+<!-- EVERYTHING BELOW IS UNCHANGED STRUCTURALLY -->
+
+<footer>Autosaves locally • Offline ready</footer>
 
 <script>
-/* =======================
-   AUTOSAVE (FIXED)
-======================= */
-document.addEventListener("DOMContentLoaded", () => {
+/* ================= AUTOSAVE (FIXED) ================= */
+document.addEventListener("DOMContentLoaded",()=>{
+  document.querySelectorAll("[data-save]").forEach(el=>{
+    if(!el.id) return;
+    const key="cs_"+el.id;
 
-  document.querySelectorAll("[data-save]").forEach(el => {
-    const key = "cs_" + el.id;
-
-    if (el.type === "checkbox") {
-      el.checked = localStorage.getItem(key) === "true";
-      el.addEventListener("change", () =>
-        localStorage.setItem(key, el.checked)
-      );
-    } else if (el.type !== "file") {
-      el.value = localStorage.getItem(key) ?? "";
-      el.addEventListener("input", () =>
-        localStorage.setItem(key, el.value)
-      );
+    if(el.type==="checkbox"){
+      el.checked=localStorage.getItem(key)==="true";
+      el.addEventListener("change",()=>localStorage.setItem(key,el.checked));
+    } else if(el.type!=="file"){
+      el.value=localStorage.getItem(key)??"";
+      el.addEventListener("input",()=>localStorage.setItem(key,el.value));
     }
   });
-
 });
 
-/* =======================
-   PORTRAIT
-======================= */
+/* ================= PORTRAIT ================= */
 const img=document.getElementById("portrait");
 const up=document.getElementById("portraitUpload");
 const savedImg=localStorage.getItem("portrait");
@@ -124,30 +142,27 @@ up.onchange=()=>{
     img.src=e.target.result;
     img.style.display="block";
     localStorage.setItem("portrait",e.target.result);
-  }
+  };
   r.readAsDataURL(up.files[0]);
 };
 
-/* =======================
-   HP BAR
-======================= */
-const hpMax=document.getElementById("hpMax"),
-      hpCur=document.getElementById("hpCur"),
-      hpTemp=document.getElementById("hpTemp"),
-      hpBar=document.getElementById("hpBar");
-
+/* ================= HP BAR ================= */
 function updateHP(){
-  const m=+hpMax.value||1,
-        c=+hpCur.value||0,
-        t=+hpTemp.value||0;
-  hpBar.style.width=Math.min(100,(c+t)/m*100)+"%";
+  const m=+hpMax.value||1,c=+hpCur.value||0,t=+hpTemp.value||0;
+  const p=(c+t)/m;
+  hpBar.style.width=Math.min(100,p*100)+"%";
+  hpBar.style.background=p>.5?"green":p>.25?"yellow":"red";
 }
-[hpMax,hpCur,hpTemp].forEach(e=>e.oninput=updateHP);
-updateHP();
+[hpMax,hpCur,hpTemp].forEach(e=>e.oninput=updateHP);updateHP();
 
-/* =======================
-   MODIFIERS
-======================= */
+/* ================= MANA BAR ================= */
+function updateMana(){
+  const m=+manaMax.value||1,c=+manaCur.value||0;
+  manaBar.style.width=Math.min(100,c/m*100)+"%";
+}
+[manaMax,manaCur].forEach(e=>e.oninput=updateMana);updateMana();
+
+/* ================= MODIFIERS ================= */
 document.querySelectorAll("[data-ability]").forEach(a=>{
   a.oninput=()=>{
     const mod=Math.floor(((+a.value||10)-10)/2);
@@ -159,4 +174,3 @@ document.querySelectorAll("[data-ability]").forEach(a=>{
 </div>
 </body>
 </html>
-
