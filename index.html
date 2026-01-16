@@ -2,171 +2,320 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>D&D Character Sheet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Full D&D Character Sheet</title>
 
 <style>
 :root{
-  --bg:#2b2f26;
-  --paper:#fdfaf4;
-  --ink:#1f1f1f;
-  --muted:#666;
-  --accent:#7b8f5a;
-  --line:#c9c4b8;
+  --paper:#faf7f2;
+  --ink:#1b1b1b;
+  --line:#8c8c8c;
+  --muted:#555;
+  --hp:#8b1e1e;
+  --mana:#1e4e8b;
 }
 *{box-sizing:border-box}
 body{
-  background:var(--bg);
-  font-family:"Inter","Segoe UI",system-ui,sans-serif;
-  padding:.75rem;
+  background:#2b2f26;
+  padding:1rem;
+  font-family:"Georgia","Times New Roman",serif;
   color:var(--ink);
 }
 .sheet{
-  max-width:1100px;
+  max-width:1300px;
   margin:auto;
   background:var(--paper);
-  padding:1rem 1.2rem;
-  border-radius:12px;
-  box-shadow:0 8px 25px rgba(0,0,0,.35);
+  padding:1.2rem;
+  border-radius:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
-h1{text-align:center}
-label{font-size:.65rem;text-transform:uppercase;color:var(--muted)}
-input, textarea{
+h1{text-align:center;margin:.2rem 0 1rem}
+h2{
+  font-size:.9rem;
+  letter-spacing:.08em;
+  border-bottom:1px solid var(--line);
+  margin:1rem 0 .5rem;
+}
+label{
+  font-size:.65rem;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+input,textarea{
   width:100%;
-  padding:.35rem .4rem;
   border:1px solid var(--line);
-  border-radius:6px;
+  background:white;
+  padding:.35rem;
+  font-family:inherit;
 }
-textarea{resize:vertical;min-height:50px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.4rem}
-.top{display:grid;grid-template-columns:160px 1fr;gap:.8rem}
-table{width:100%;border-collapse:collapse;font-size:.75rem}
-th,td{border:1px solid var(--line);padding:.25rem}
-.bar{height:16px;background:#333;border-radius:999px;overflow:hidden}
-.fill{height:100%;width:0%;transition:.2s}
-.checkbox-row{display:flex;gap:.4rem;flex-wrap:wrap}
-footer{text-align:center;font-size:.6rem;margin-top:.6rem;opacity:.6}
+textarea{resize:vertical;min-height:80px}
+.top{
+  display:grid;
+  grid-template-columns:180px 1fr 300px;
+  gap:1rem;
+}
+.portrait{
+  border:2px solid var(--line);
+  padding:.25rem;
+}
+.portrait img{
+  width:100%;
+  aspect-ratio:3/4;
+  object-fit:cover;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:.5rem;
+}
+.abilities{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.5rem;
+}
+.ability{
+  border:1px solid var(--line);
+  padding:.5rem;
+  text-align:center;
+}
+.health,.mana{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.5rem;
+}
+.bar{
+  grid-column:1/4;
+  background:#ddd;
+  border:1px solid var(--line);
+  height:18px;
+  border-radius:10px;
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  width:100%;
+  transition:width .3s;
+}
+.hpfill{background:var(--hp)}
+.manafill{background:var(--mana)}
+.death{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.3rem;
+  text-align:center;
+}
+.racial{
+  border:1px solid var(--line);
+  padding:.5rem;
+}
+.racial-options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.5rem;
+  margin-bottom:.5rem;
+}
+.inventory textarea{
+  min-height:220px;
+  font-family:"Courier New",monospace;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  border:1px solid var(--line);
+  padding:.4rem;
+}
+th{
+  background:#e9e4d8;
+  font-size:.7rem;
+  text-transform:uppercase;
+}
+td{background:#fffdf8}
+td.center{text-align:center}
+footer{
+  text-align:center;
+  font-size:.6rem;
+  margin-top:1rem;
+  opacity:.6;
+}
 </style>
 </head>
 
 <body>
 <div class="sheet">
-
 <h1>D&D Character Sheet</h1>
 
-<!-- TOP -->
 <div class="top">
-  <div class="portrait">
-    <img id="portrait">
-    <input type="file" id="portraitUpload" accept="image/*">
-  </div>
+<div class="portrait">
+  <img id="portraitImg">
+  <input type="file" id="portraitUpload" accept="image/*">
+</div>
+
+<div>
   <div class="grid">
-    <div><label>Name</label><input id="name" data-save></div>
-    <div><label>Class & Level</label><input id="level" data-save></div>
-    <div><label>Race</label><input id="race" data-save></div>
-    <div><label>Background</label><input id="background" data-save></div>
-    <div><label>Alignment</label><input id="alignment" data-save></div>
-    <div><label>Player</label><input id="player" data-save></div>
+    <div><label>Name</label><input data-save="text" data-key="name"></div>
+    <div><label>Class & Level</label><input data-save="text" data-key="level"></div>
+    <div><label>Race</label><input data-save="text" data-key="race"></div>
+    <div><label>Background</label><input data-save="text" data-key="background"></div>
+    <div><label>Alignment</label><input data-save="text" data-key="alignment"></div>
+    <div><label>Player</label><input data-save="text" data-key="player"></div>
+  </div>
+
+  <h2>Ability Scores</h2>
+  <div class="abilities">
+    <div class="ability"><label>STR</label><input data-save="number" data-key="str"><div id="mod_str"></div></div>
+    <div class="ability"><label>DEX</label><input data-save="number" data-key="dex"><div id="mod_dex"></div></div>
+    <div class="ability"><label>CON</label><input data-save="number" data-key="con"><div id="mod_con"></div></div>
+    <div class="ability"><label>INT</label><input data-save="number" data-key="int"><div id="mod_int"></div></div>
+    <div class="ability"><label>WIS</label><input data-save="number" data-key="wis"><div id="mod_wis"></div></div>
+    <div class="ability"><label>CHA</label><input data-save="number" data-key="cha"><div id="mod_cha"></div></div>
+  </div>
+
+  <h2>Health</h2>
+  <div class="health">
+    <div><label>Max HP</label><input data-save="number" data-key="hp_max"></div>
+    <div><label>Current HP</label><input data-save="number" data-key="hp_current"></div>
+    <div><label>Temp HP</label><input data-save="number" data-key="hp_temp"></div>
+    <div class="bar"><div class="fill hpfill" id="hpfill"></div></div>
+  </div>
+
+  <h2>Mana</h2>
+  <div class="mana">
+    <div><label>Max Mana</label><input data-save="number" data-key="mana_max"></div>
+    <div><label>Current Mana</label><input data-save="number" data-key="mana_current"></div>
+    <div></div>
+    <div class="bar"><div class="fill manafill" id="manafill"></div></div>
+  </div>
+
+  <h2>Death Saves</h2>
+  <div class="death">
+    <input type="checkbox" data-save="check" data-key="ds_s1">Success
+    <input type="checkbox" data-save="check" data-key="ds_s2">Success
+    <input type="checkbox" data-save="check" data-key="ds_s3">Success
+    <input type="checkbox" data-save="check" data-key="ds_f1">Fail
+    <input type="checkbox" data-save="check" data-key="ds_f2">Fail
+    <input type="checkbox" data-save="check" data-key="ds_f3">Fail
   </div>
 </div>
 
-<h2>Character Details</h2>
-<div class="grid">
-  <div><label>Age</label><input id="age" data-save></div>
-  <div><label>Eyes</label><input id="eyes" data-save></div>
-  <div><label>Height</label><input id="height" data-save></div>
-  <div><label>Skin</label><input id="skin" data-save></div>
-</div>
-<label>Backstory</label>
-<textarea id="backstory" data-save></textarea>
+<div class="inventory">
+  <h2>Inventory</h2>
+  <textarea data-save="text" data-key="inventory"></textarea>
 
-<h2>Ability Scores</h2>
-<table>
-<tr><th>Ability</th><th>Score</th><th>Modifier</th></tr>
-<tr><td>STR</td><td><input id="str" data-ability="str" data-save></td><td><input id="strMod" data-mod data-mod-ability="str" data-save></td></tr>
-<tr><td>DEX</td><td><input id="dex" data-ability="dex" data-save></td><td><input id="dexMod" data-mod data-mod-ability="dex" data-save></td></tr>
-<tr><td>CON</td><td><input id="con" data-ability="con" data-save></td><td><input id="conMod" data-mod data-mod-ability="con" data-save></td></tr>
-<tr><td>INT</td><td><input id="int" data-ability="int" data-save></td><td><input id="intMod" data-mod data-mod-ability="int" data-save></td></tr>
-<tr><td>WIS</td><td><input id="wis" data-ability="wis" data-save></td><td><input id="wisMod" data-mod data-mod-ability="wis" data-save></td></tr>
-<tr><td>CHA</td><td><input id="cha" data-ability="cha" data-save></td><td><input id="chaMod" data-mod data-mod-ability="cha" data-save></td></tr>
+  <h2>Personality</h2>
+  <textarea data-save="text" data-key="personality"></textarea>
+
+  <h2>Racial Abilities (1 use / day)</h2>
+  <div class="racial">
+    <div class="racial-options">
+      <label><input type="checkbox" data-save="check" data-key="racial_1"> Ability 1 Used</label>
+      <label><input type="checkbox" data-save="check" data-key="racial_2"> Ability 2 Used</label>
+    </div>
+    <textarea data-save="text" data-key="racial_desc"
+      placeholder="Describe the two racial abilities and when they can be used..."></textarea>
+  </div>
+</div>
+</div>
+
+<h2>Skills</h2>
+<table id="skills">
+<tr><th>Skill</th><th>Ability</th><th>Prof</th><th>Total</th></tr>
+<!-- full skill list unchanged -->
+<tr data-ability="str"><td>Athletics</td><td class="center">STR</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_ath"></td><td><input readonly></td></tr>
+<tr data-ability="dex"><td>Acrobatics</td><td class="center">DEX</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_acro"></td><td><input readonly></td></tr>
+<tr data-ability="dex"><td>Sleight of Hand</td><td class="center">DEX</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_soh"></td><td><input readonly></td></tr>
+<tr data-ability="dex"><td>Stealth</td><td class="center">DEX</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_ste"></td><td><input readonly></td></tr>
+<tr data-ability="int"><td>Arcana</td><td class="center">INT</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_arc"></td><td><input readonly></td></tr>
+<tr data-ability="int"><td>History</td><td class="center">INT</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_his"></td><td><input readonly></td></tr>
+<tr data-ability="int"><td>Investigation</td><td class="center">INT</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_inv"></td><td><input readonly></td></tr>
+<tr data-ability="int"><td>Nature</td><td class="center">INT</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_nat"></td><td><input readonly></td></tr>
+<tr data-ability="int"><td>Religion</td><td class="center">INT</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_rel"></td><td><input readonly></td></tr>
+<tr data-ability="wis"><td>Animal Handling</td><td class="center">WIS</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_ani"></td><td><input readonly></td></tr>
+<tr data-ability="wis"><td>Insight</td><td class="center">WIS</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_ins"></td><td><input readonly></td></tr>
+<tr data-ability="wis"><td>Medicine</td><td class="center">WIS</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_med"></td><td><input readonly></td></tr>
+<tr data-ability="wis"><td>Perception</td><td class="center">WIS</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_per"></td><td><input readonly></td></tr>
+<tr data-ability="wis"><td>Survival</td><td class="center">WIS</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_sur"></td><td><input readonly></td></tr>
+<tr data-ability="cha"><td>Deception</td><td class="center">CHA</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_dec"></td><td><input readonly></td></tr>
+<tr data-ability="cha"><td>Intimidation</td><td class="center">CHA</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_intim"></td><td><input readonly></td></tr>
+<tr data-ability="cha"><td>Performance</td><td class="center">CHA</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_perf"></td><td><input readonly></td></tr>
+<tr data-ability="cha"><td>Persuasion</td><td class="center">CHA</td><td class="center"><input type="checkbox" data-save="check" data-key="skill_pers"></td><td><input readonly></td></tr>
 </table>
 
-<h2>Combat</h2>
-<div class="grid">
-  <div><label>AC</label><input id="ac" data-save></div>
-  <div><label>Initiative</label><input id="initiative" data-save></div>
-  <div><label>Speed</label><input id="speed" data-save></div>
-  <div><label>HP Max</label><input id="hpMax" type="number" data-save></div>
-  <div><label>Current HP</label><input id="hpCur" type="number" data-save></div>
-  <div><label>Temp HP</label><input id="hpTemp" type="number" data-save></div>
-  <div><label>Block</label><input id="block" type="number" data-save></div>
+<footer>Autosaves locally • Offline • Racial abilities + Mana</footer>
 </div>
-<div class="bar"><div id="hpBar" class="fill" style="background:green"></div></div>
-
-<h2>Mana</h2>
-<div class="grid">
-  <div><label>Mana Max</label><input id="manaMax" data-save></div>
-  <div><label>Current Mana</label><input id="manaCur" data-save></div>
-</div>
-<div class="bar"><div id="manaBar" class="fill" style="background:#4aa3ff"></div></div>
-
-<footer>Autosaves locally • Offline ready</footer>
 
 <script>
-/* ========= AUTOSAVE (FIXED) ========= */
-document.addEventListener("DOMContentLoaded",()=>{
+function initSave(){
   document.querySelectorAll("[data-save]").forEach(el=>{
-    const key="cs_"+el.id;
-    if(el.type==="checkbox"){
+    const key=el.dataset.key;
+    const type=el.dataset.save;
+    if(type==="check"){
       el.checked=localStorage.getItem(key)==="true";
       el.addEventListener("change",()=>localStorage.setItem(key,el.checked));
-    } else if(el.type!=="file"){
-      el.value=localStorage.getItem(key)??"";
+    }else{
+      el.value=localStorage.getItem(key)||"";
       el.addEventListener("input",()=>localStorage.setItem(key,el.value));
+    }
+  });
+}
+initSave();
+
+/* enforce only one racial ability per day */
+const r1=document.querySelector('[data-key="racial_1"]');
+const r2=document.querySelector('[data-key="racial_2"]');
+[r1,r2].forEach(r=>{
+  r.addEventListener("change",()=>{
+    if(r.checked){
+      if(r===r1){r2.checked=false;localStorage.setItem("racial_2",false);}
+      else{r1.checked=false;localStorage.setItem("racial_1",false);}
     }
   });
 });
 
-/* ========= PORTRAIT ========= */
-const img=document.getElementById("portrait");
+const img=document.getElementById("portraitImg");
 const up=document.getElementById("portraitUpload");
 const savedImg=localStorage.getItem("portrait");
-if(savedImg){img.src=savedImg;img.style.display="block";}
+if(savedImg)img.src=savedImg;
 up.onchange=()=>{
   const r=new FileReader();
   r.onload=e=>{
     img.src=e.target.result;
-    img.style.display="block";
     localStorage.setItem("portrait",e.target.result);
   };
   r.readAsDataURL(up.files[0]);
 };
 
-/* ========= HP BAR ========= */
-function updateHP(){
-  const m=+hpMax.value||1,c=+hpCur.value||0,t=+hpTemp.value||0;
-  const p=(c+t)/m;
-  hpBar.style.width=Math.min(100,p*100)+"%";
-  hpBar.style.background=p>.5?"green":p>.25?"yellow":"red";
+function mod(score){return Math.floor((score-10)/2);}
+function profBonus(){
+  const lvl=parseInt(localStorage.getItem("level"))||1;
+  return lvl>=17?6:lvl>=13?5:lvl>=9?4:lvl>=5?3:2;
 }
-[hpMax,hpCur,hpTemp].forEach(e=>e.oninput=updateHP);updateHP();
-
-/* ========= MANA BAR ========= */
-function updateMana(){
-  const m=+manaMax.value||1,c=+manaCur.value||0;
-  manaBar.style.width=Math.min(100,c/m*100)+"%";
+function updateBars(){
+  const hpMax=parseInt(localStorage.getItem("hp_max"))||1;
+  const hpCur=parseInt(localStorage.getItem("hp_current"))||0;
+  document.getElementById("hpfill").style.width=Math.max(0,Math.min(100,(hpCur/hpMax)*100))+"%";
+  const mMax=parseInt(localStorage.getItem("mana_max"))||1;
+  const mCur=parseInt(localStorage.getItem("mana_current"))||0;
+  document.getElementById("manafill").style.width=Math.max(0,Math.min(100,(mCur/mMax)*100))+"%";
 }
-[manaMax,manaCur].forEach(e=>e.oninput=updateMana);updateMana();
-
-/* ========= MODIFIERS ========= */
-document.querySelectorAll("[data-ability]").forEach(a=>{
-  a.oninput=()=>{
-    const mod=Math.floor(((+a.value||10)-10)/2);
-    document.querySelector(`[data-mod-ability="${a.dataset.ability}"]`).value=mod;
-  };
-});
+function updateMods(){
+  ["str","dex","con","int","wis","cha"].forEach(a=>{
+    const v=parseInt(localStorage.getItem(a))||10;
+    document.getElementById("mod_"+a).textContent="Mod: "+(mod(v)>=0?"+":"")+mod(v);
+  });
+}
+function updateSkills(){
+  document.querySelectorAll("#skills tr[data-ability]").forEach(r=>{
+    const a=r.dataset.ability;
+    const score=parseInt(localStorage.getItem(a))||10;
+    const total=mod(score)+(r.querySelector("input[type=checkbox]").checked?profBonus():0);
+    r.querySelector("input[readonly]").value=(total>=0?"+":"")+total;
+  });
+}
+window.addEventListener("input",()=>{updateMods();updateSkills();updateBars();});
+window.addEventListener("change",()=>{updateMods();updateSkills();updateBars();});
+updateMods();updateSkills();updateBars();
 </script>
-
-</div>
 </body>
 </html>
